@@ -6,11 +6,11 @@
 
     <groupId>bebe.solr</groupId>
     <artifactId>solr-hbase-dataimporter</artifactId>
-    <version>5.5.4</version>
+    <version>7.2.1</version>
 
     <properties>
-        <lucene.version>5.5.4</lucene.version>
-        <cdh.version>1.2.0-cdh5.9.0</cdh.version>
+        <lucene.version>7.2.1</lucene.version>
+        <hbase.version>1.1.2.2.5.0.0-1245</hbase.version>
     </properties>
 
     <dependencies>
@@ -32,12 +32,12 @@
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-client</artifactId>
-            <version>${cdh.version}</version>
+            <version>${hbase.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-common</artifactId>
-            <version>${cdh.version}</version>
+            <version>${hbase.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -120,8 +120,27 @@
         </repository>
 
         <repository>
-            <id>cloudera</id>
-            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>hortonworks.extrepo</id>
+            <name>Hortonworks HDP</name>
+            <url>http://repo.hortonworks.com/content/repositories/releases</url>
+        </repository>
+
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>hortonworks.other</id>
+            <name>Hortonworks Other Dependencies</name>
+            <url>http://repo.hortonworks.com/content/groups/public</url>
         </repository>
     </repositories>
 </project>

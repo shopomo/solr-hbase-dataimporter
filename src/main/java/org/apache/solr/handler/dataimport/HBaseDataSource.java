@@ -16,9 +16,11 @@ import java.util.*;
 public class HBaseDataSource extends DataSource<Iterator<Map<String, Object>>>{
     private static final Logger LOG = LoggerFactory.getLogger(HBaseDataSource.class);
     private static final String ZOOKEEPER = "zookeeper";
-    private static final String ROOT_DIR = "rootDir";
+    private static final String PORT = "port";
+    private static final String PARENT_NODE = "parent_node";
+    private static final String HBASE_ZOOKEEPER_CLIENT_PORT = "hbase.zookeeper.property.clientPort";
     private static final String HBASE_ZOOKEEPER_QUORUM = "hbase.zookeeper.quorum";
-    private static final String HBASE_ROOT_DIR = "hbase.root.dir";
+    private static final String ZOOKEEPER_ZNODE_PARENT = "zookeeper.znode.parent";
     private static final String TABLE = "table";
 
     private Connection connection;
@@ -30,12 +32,13 @@ public class HBaseDataSource extends DataSource<Iterator<Map<String, Object>>>{
         this.context = context;
 
         String zooKeeperQuorum = (String) properties.get(ZOOKEEPER);
-        String hdfsRootDir = (String) properties.get(ROOT_DIR);
+        Integer clientPort = Integer.parseInt(properties.getProperty(PORT));
+        String parentNode = (String) properties.get(PARENT_NODE);
         String tableName = context.getEntityAttribute(TABLE);
-        if(zooKeeperQuorum==null || hdfsRootDir == null){
+        if(zooKeeperQuorum == null || parentNode == null){
             throw new DataImportException(String.format("required value is missing %s:%s or %s:%s"
                     , ZOOKEEPER, zooKeeperQuorum
-                    , ROOT_DIR, hdfsRootDir));
+                    , PARENT_NODE, parentNode));
         }
 
         if(tableName == null){
@@ -44,7 +47,8 @@ public class HBaseDataSource extends DataSource<Iterator<Map<String, Object>>>{
 
         Configuration config = HBaseConfiguration.create();
         config.set(HBASE_ZOOKEEPER_QUORUM, zooKeeperQuorum);
-        config.set(HBASE_ROOT_DIR, hdfsRootDir);
+        config.set(ZOOKEEPER_ZNODE_PARENT, parentNode);
+        config.setInt(HBASE_ZOOKEEPER_CLIENT_PORT, clientPort);
         try {
             connection = ConnectionFactory.createConnection(config);
             table = connection.getTable(TableName.valueOf(tableName));
@@ -89,6 +93,5 @@ public class HBaseDataSource extends DataSource<Iterator<Map<String, Object>>>{
                 }
             }
         }
-
     }
 }
